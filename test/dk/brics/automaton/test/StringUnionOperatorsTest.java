@@ -1,4 +1,9 @@
-package dk.brics.automaton;
+package dk.brics.automaton.test;
+
+import dk.brics.automaton.Automaton;
+import dk.brics.automaton.AutomatonMatcher;
+import dk.brics.automaton.RegExp;
+import dk.brics.automaton.RunAutomaton;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
