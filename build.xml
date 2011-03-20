@@ -26,9 +26,9 @@
 
 	<target name="compile">
 		<mkdir dir="build" />
-		<javac srcdir="src" destdir="build" source="1.5" target="1.5" optimize="${optimize}" debug="${debug}" />
+		<javac srcdir="src" destdir="build" source="1.5" target="1.5" optimize="${optimize}" debug="${debug}" includeantruntime="false"/>
 		<mkdir dir="buildtest" />
-		<javac srcdir="test" destdir="buildtest" source="1.5" target="1.5" optimize="${optimize}" debug="on">
+		<javac srcdir="test" destdir="buildtest" source="1.5" target="1.5" optimize="${optimize}" debug="on" includeantruntime="false">
 			<classpath refid="test.compile.classpath"/>
 		</javac>
 	</target>
