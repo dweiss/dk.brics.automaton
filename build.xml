@@ -11,11 +11,26 @@
 
 	<property name="public" value="${user.home}/public_html/${project}"/>
 
-	<target name="all" depends="jar,doc" />
+	<target name="all" depends="test,jar,doc" />
+
+	<path id="test.compile.classpath">
+		<pathelement location="build"/>
+		<fileset dir="lib">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+	<path id="test.runtime.classpath">
+		<pathelement location="buildtest"/>
+		<path refid="test.compile.classpath"/>
+	</path>
 
 	<target name="compile">
 		<mkdir dir="build" />
 		<javac srcdir="src" destdir="build" source="1.5" target="1.5" optimize="${optimize}" debug="${debug}" />
+		<mkdir dir="buildtest" />
+		<javac srcdir="test" destdir="buildtest" source="1.5" target="1.5" optimize="${optimize}" debug="on">
+			<classpath refid="test.compile.classpath"/>
+		</javac>
 	</target>
 
 	<target name="jar" depends="compile,datatypes">
@@ -25,8 +40,22 @@
 
 	<target name="clean">
 		<delete dir="build" />
+		<delete dir="buildtest" />
 		<delete dir="doc" />
 		<delete dir="dist" />
+	</target>
+
+	<target name="test" depends="compile">
+		<junit forkmode="perBatch" fork="true" printsummary="yes">
+			<classpath refid="test.runtime.classpath"/>
+			<formatter usefile="false" type="plain"/>
+
+			<batchtest>
+				<fileset dir="test">
+					<include name="**/Test*.java"/>
+				</fileset>
+			</batchtest>
+		</junit>
 	</target>
 
 	<dependset>
