@@ -50,6 +50,17 @@ public class StringUnionOperatorsTest
     }
     
     @Test
+    public void testNoMatch()
+    {
+        final Automaton runAutomaton = new RegExp("abax").toAutomaton();
+
+        AutomatonMatcher m = new RunAutomaton(runAutomaton).newMatcher("ababax");
+        assertTrue(m.find());
+        assertEquals("abax", m.group());
+        assertFalse(m.find());
+    }
+
+    @Test
     public void testAStar()
     {
         final Automaton runAutomaton = new RegExp("a*").toAutomaton();

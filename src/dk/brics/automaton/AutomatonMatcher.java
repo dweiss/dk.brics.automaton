@@ -92,10 +92,10 @@ public class AutomatonMatcher implements MatchResult {
 			match_start = NOT_SET;
 			match_end = NOT_SET;
 		}
-		int l = getChars().length();
-		while (begin < l) {
+		int len = getChars().length();
+		while (begin < len) {
 			int p = automaton.getInitialState();
-			for (int i = begin; i < l; match_end = i += 1) {
+			for (int i = begin; i < len; i += 1) {
 				final int new_state = automaton.step(p, getChars().charAt(i));
 				if (new_state == -1) {
 					break;
@@ -103,6 +103,8 @@ public class AutomatonMatcher implements MatchResult {
 					if (match_start == NOT_SET) {
 						match_start = begin;
 					}
+					if (match_start != NOT_SET)
+					    match_end = i + 1;
 				}
 				p = new_state;
 			}
