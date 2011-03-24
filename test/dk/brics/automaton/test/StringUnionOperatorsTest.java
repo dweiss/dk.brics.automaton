@@ -1,15 +1,14 @@
 package dk.brics.automaton.test;
 
-import dk.brics.automaton.Automaton;
-import dk.brics.automaton.AutomatonMatcher;
-import dk.brics.automaton.RegExp;
-import dk.brics.automaton.RunAutomaton;
+import static org.junit.Assert.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Test;
+
+import dk.brics.automaton.*;
 
 public class StringUnionOperatorsTest
 {
@@ -48,5 +47,25 @@ public class StringUnionOperatorsTest
         AutomatonMatcher m = new RunAutomaton(runAutomaton).newMatcher("abcde");
         assertTrue(m.find());
         assertEquals("abc", m.group());
+    }
+    
+    @Test
+    public void testAStar()
+    {
+        final Automaton runAutomaton = new RegExp("a*").toAutomaton();
+
+        AutomatonMatcher m = new RunAutomaton(runAutomaton).newMatcher("baac");
+        List<String> result = new ArrayList<String>();
+        while (m.find())
+        {
+            result.add(">" + m.group() + "<");
+        }
+        
+        Assert.assertArrayEquals(new Object[] {
+            "><",
+            ">aa<",
+            "><",
+            "><",
+        }, result.toArray());
     }
 }
