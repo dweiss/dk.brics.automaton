@@ -49,24 +49,26 @@ public class AutomatonMatcher implements MatchResult {
 	private final RunAutomaton automaton;
 	private final CharSequence chars;
 
-	private int matchStart = -1;
-
-	private int matchEnd = -1;
+	private final static int NOT_SET = -1;
+	private final static int EOS = -2;
+	
+	private int matchStart = NOT_SET;
+	private int matchEnd = NOT_SET;
 
 	/**
 	 * Find the next matching subsequence of the input.
 	 * <br />
-	 * This also updates the values for the {@code start}, {@code end}, and
-	 * {@code group} methods.
+	 * This also updates the values for the {@link #start}, {@link #end}, and
+	 * {@link #group} methods.
 	 *
 	 * @return {@code true} if there is a matching subsequence.
 	 */
 	public boolean find() {
 		int begin;
 		switch(getMatchStart()) {
-			case -2:
+			case EOS:
 			return false;
-			case -1:
+			case NOT_SET:
 			begin = 0;
 				break;
 			default:
@@ -75,7 +77,7 @@ public class AutomatonMatcher implements MatchResult {
 				if(begin == getMatchStart()) {
 					begin += 1;
 					if(begin > getChars().length()) {
-						setMatch(-2, -2);
+						setMatch(EOS, EOS);
 						return false;
 					}
 				}
@@ -87,8 +89,8 @@ public class AutomatonMatcher implements MatchResult {
 			match_start = begin;
 			match_end = begin;
 		} else {
-			match_start = -1;
-			match_end = -1;
+			match_start = NOT_SET;
+			match_end = NOT_SET;
 		}
 		int l = getChars().length();
 		while (begin < l) {
@@ -98,23 +100,23 @@ public class AutomatonMatcher implements MatchResult {
 				if (new_state == -1) {
 					break;
 				} else if (automaton.isAccept(new_state)) {
-					if (match_start == -1) {
+					if (match_start == NOT_SET) {
 						match_start = begin;
 					}
 				}
 				p = new_state;
 			}
-			if (match_start != -1) {
+			if (match_start != NOT_SET) {
 				setMatch(match_start, match_end);
 				return true;
 			}
 			begin += 1;
 		}
-		if (match_start != -1) {
+		if (match_start != NOT_SET) {
 			setMatch(match_start, match_end);
 			return true;
 		} else {
-			setMatch(-2, -2);
+			setMatch(EOS, EOS);
 			return false;
 		}
 	}
